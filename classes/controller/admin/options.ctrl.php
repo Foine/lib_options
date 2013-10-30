@@ -48,8 +48,14 @@ class Controller_Admin_Options extends \Nos\Controller_Admin_Application
 
     public function action_form($context = null)
     {
+        $context = $context ? $context : \Nos\Tools_Context::defaultContext();
+        $placeholders = array(
+            '_context' => $context,
+        );
+        $this->config = \Config::placeholderReplace($this->config, $placeholders, false);
+
         $view_params = $this->view_params();
-        $view_params['context'] = $context ? $context : \Nos\Tools_Context::defaultContext();
+        $view_params['context'] = $context;
         \Arr::set($view_params, 'config.'.$view_params['context'].'.context', $view_params['context']);
         $fields = $this->config['fields'];
 
