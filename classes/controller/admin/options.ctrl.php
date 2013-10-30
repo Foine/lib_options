@@ -69,12 +69,14 @@ class Controller_Admin_Options extends \Nos\Controller_Admin_Application
         \Nos\I18n::current_dictionary(array('lib_options::default', 'nos::common'));
         $config = \Config::load(APPPATH.self::$options_path, true);
         $context = \Fuel\Core\Input::post('context') ? \Fuel\Core\Input::post('context') : \Nos\Tools_Context::defaultContext();
+        $config[$context] = array();
+        \Config::save(APPPATH.self::$options_path,$config); //Empty the configuration file for the current context is needed to update fields such as checkbox
         if ($context != '') {
             foreach ($_POST as $name => $value) {
                 if ($name == 'context') continue;
                 $config[$context][$name] = \Fuel\Core\Input::post($name);
             }
-            $result = \Config::save(APPPATH.$this->options_path, $config);
+            $result = \Config::save(APPPATH.self::$options_path, $config);
         }
         $return = array();
         if (!empty($result)) {
