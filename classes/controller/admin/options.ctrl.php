@@ -37,7 +37,7 @@ class Controller_Admin_Options extends \Nos\Controller_Admin_Application
             'labelDisplay' => false,
         ),
     );
-    protected $options_path;
+    protected static $options_path;
 
     public function before()
     {
@@ -67,7 +67,7 @@ class Controller_Admin_Options extends \Nos\Controller_Admin_Application
     public function action_save($view = null)
     {
         \Nos\I18n::current_dictionary(array('lib_options::default', 'nos::common'));
-        $config = \Config::load(APPPATH.$this->options_path, true);
+        $config = \Config::load(APPPATH.self::$options_path, true);
         $context = \Fuel\Core\Input::post('context') ? \Fuel\Core\Input::post('context') : \Nos\Tools_Context::defaultContext();
         if ($context != '') {
             foreach ($_POST as $name => $value) {
@@ -91,6 +91,11 @@ class Controller_Admin_Options extends \Nos\Controller_Admin_Application
         return \Fuel\Core\Format::forge($return)->to_json();
     }
 
+    public static function getOptions($return = true) {
+        if (!self::$options_path) self::_setOptionsPath();
+        return \Config::load(APPPATH.self::$options_path, $return);
+    }
+
     /**
      * Set params used in view
      * WARNING : As views can forge other views, it is necessary to add view_params in view_params...
@@ -106,7 +111,7 @@ class Controller_Admin_Options extends \Nos\Controller_Admin_Application
                 'url_form' => $this->config['controller_url'].'/form',
                 'url_save' => $this->config['controller_url'].'/save',
             ),
-            'config' => \Config::load(APPPATH.$this->options_path, true),
+            'config' => \Config::load(APPPATH.self::$options_path, true),
             'app_name' => \Arr::get($metadata, 'name'),
         );
 
@@ -128,7 +133,7 @@ class Controller_Admin_Options extends \Nos\Controller_Admin_Application
     }
 
     protected function _setOptionsPath() {
-        $this->options_path = 'data/apps/'.self::getCurrentApplication().'/options.config.php';
+        self::$options_path = 'data/apps/'.self::getCurrentApplication().'/options.config.php';
     }
 
     protected function config_build()
