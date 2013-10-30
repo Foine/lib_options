@@ -35,6 +35,7 @@ $form_id = uniqid('options_form');
                 var $form = $('#<?= $form_id ?>');
                 $form.nosFormAjax();
                 $form.nosFormUI();
+                $form.nosOnShow();
                 $form.nosTabs('update', <?=  \Format::forge($view_params['options']['config']['tab'])->to_json() ?>);
             }
             );
