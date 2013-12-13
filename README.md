@@ -12,7 +12,7 @@ Current version: 0.4
 * Install the application
 * That's all !
 
-You can use this app in two different way
+You can use this app in two different way without modifying it.
 **First way : use it to configure any application**
 
 ***1/ Extend the lib_options controller***
@@ -124,6 +124,7 @@ To do that, listen the config load event for the controller :
         $config = \Arr::merge($config, $your_config);
     }
 
+You'll still have to create an entry point : if the use of a launcher suits you, the local/config/metadata.config.php file could do the job.
 Enjoy ! (again)
 
 I hope there is no mistake in the code that I give you.
