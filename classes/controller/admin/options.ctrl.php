@@ -37,7 +37,7 @@ class Controller_Admin_Options extends \Nos\Controller_Admin_Application
             'labelDisplay' => false,
         ),
     );
-    protected static $options_path;
+    protected static $options_paths = array();
 
     public function before()
     {
@@ -73,16 +73,16 @@ class Controller_Admin_Options extends \Nos\Controller_Admin_Application
     public function action_save($view = null)
     {
         \Nos\I18n::current_dictionary(array('lib_options::default', 'nos::common'));
-        $config = \Config::load(APPPATH.self::$options_path, true);
+        $config = \Config::load(APPPATH.self::$options_paths[get_called_class()], true);
         $context = \Fuel\Core\Input::post('context') ? \Fuel\Core\Input::post('context') : \Nos\Tools_Context::defaultContext();
         $config[$context] = array();
-        \Config::save(APPPATH.self::$options_path,$config); //Empty the configuration file for the current context is needed to update fields such as checkbox
+        \Config::save(APPPATH.self::$options_paths[get_called_class()],$config); //Empty the configuration file for the current context is needed to update fields such as checkbox
         if ($context != '') {
             foreach ($_POST as $name => $value) {
                 if ($name == 'context') continue;
                 $config[$context][$name] = \Fuel\Core\Input::post($name);
             }
-            $result = \Config::save(APPPATH.self::$options_path, $config);
+            $result = \Config::save(APPPATH.self::$options_paths[get_called_class()], $config);
         }
         $return = array();
         if (!empty($result)) {
@@ -100,8 +100,8 @@ class Controller_Admin_Options extends \Nos\Controller_Admin_Application
     }
 
     public static function getOptions($return = true) {
-        if (!self::$options_path) self::_setOptionsPath();
-        return \Config::load(APPPATH.self::$options_path, $return);
+        if (!self::$options_paths[get_called_class()]) self::_setOptionsPath();
+        return \Config::load(APPPATH.self::$options_paths[get_called_class()], $return);
     }
 
     /**
@@ -119,7 +119,7 @@ class Controller_Admin_Options extends \Nos\Controller_Admin_Application
                 'url_form' => $this->config['controller_url'].'/form',
                 'url_save' => $this->config['controller_url'].'/save',
             ),
-            'config' => \Config::load(APPPATH.self::$options_path, true),
+            'config' => \Config::load(APPPATH.self::$options_paths[get_called_class()], true),
             'app_name' => \Arr::get($metadata, 'name'),
         );
 
@@ -142,7 +142,7 @@ class Controller_Admin_Options extends \Nos\Controller_Admin_Application
 
     protected static function _setOptionsPath() {
         list($application, $file_name) = \Config::configFile(get_called_class());
-        self::$options_path = 'data/apps/'.$application.'/options.config.php';
+        self::$options_paths[get_called_class()] = 'data/apps/'.$application.'/options.config.php';
     }
 
     protected function config_build()
