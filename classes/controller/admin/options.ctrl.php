@@ -100,7 +100,7 @@ class Controller_Admin_Options extends \Nos\Controller_Admin_Application
     }
 
     public static function getOptions($return = true) {
-        if (!self::$options_paths[get_called_class()]) self::_setOptionsPath();
+        if (!isset(self::$options_paths[get_called_class()]) || !self::$options_paths[get_called_class()]) self::_setOptionsPath();
         return \Config::load(APPPATH.self::$options_paths[get_called_class()], $return);
     }
 
