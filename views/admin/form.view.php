@@ -10,10 +10,10 @@ $form_id = uniqid('options_form');
         </div>
     </div>
     <?php
-    echo $fieldset->open($options['url_save']);
+    echo $fieldset->open($lib_options['url_save']);
     echo $fieldset->build_hidden_fields();
 
-    $layout = $options['config']['layout'];
+    $layout = $lib_options['config']['layout'];
     foreach ($layout as $view) {
         if (!empty($view['view'])) {
             $view['params'] = empty($view['params']) ? array() : $view['params'];
@@ -36,7 +36,7 @@ $form_id = uniqid('options_form');
                 $form.nosFormAjax();
                 $form.nosFormUI();
                 $form.nosOnShow();
-                $form.nosTabs('update', <?=  \Format::forge($view_params['options']['config']['tab'])->to_json() ?>);
+                $form.nosTabs('update', <?=  \Format::forge($view_params['lib_options']['config']['tab'])->to_json() ?>);
             }
             );
 </script>

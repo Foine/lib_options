@@ -3,7 +3,7 @@ $action = array(
     'action' => 'nosTabs',
     'method' => 'update',
     'tab' => array(
-        'url' => $options['config']['controller_url'].'/form/',
+        'url' => $lib_options['config']['controller_url'].'/form/',
         'reload' => true,
     ),
 );
@@ -24,7 +24,7 @@ if (count($contexts) > 1) {
             $uiElement['menu']['menus'][$i]['content'] = \Nos\Tools_Context::contextLabel($context, array('template' => '{site}<br />{locale}', 'short' => true));
             $uiElement['menu']['menus'][$i]['label'] = \Nos\Tools_Context::contextLabel($context, array('template' => '{site}<br />{locale}', 'short' => true));
             $uiElement['menu']['menus'][$i]['action'] = $action;
-            $uiElement['menu']['menus'][$i]['action']['tab']['url'] = $options['config']['controller_url'].'/form/'.$context;
+            $uiElement['menu']['menus'][$i]['action']['tab']['url'] = $lib_options['config']['controller_url'].'/form/'.$context;
             $i++;
         }
     }

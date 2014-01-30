@@ -114,7 +114,7 @@ class Controller_Admin_Options extends \Nos\Controller_Admin_Application
     {
         $metadata = \Config::load(self::getCurrentApplication().'::metadata');
         $view_params = array(
-            'options' => array(
+            'lib_options' => array(
                 'config' => $this->config,
                 'url_form' => $this->config['controller_url'].'/form',
                 'url_save' => $this->config['controller_url'].'/save',
