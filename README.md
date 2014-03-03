@@ -39,6 +39,7 @@ This layout is based on the typographic grid already used in NOS.
 Next, an empty configuration that you can take to do yours :
 
     return array(
+        'form_name' => 'My configuration form', //Optional
         'layout' => array(
             'lines' => array(
                 array(
