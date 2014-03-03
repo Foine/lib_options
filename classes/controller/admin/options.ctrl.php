@@ -31,11 +31,13 @@ class Controller_Admin_Options extends \Nos\Controller_Admin_Application
         'tab' => array(
             'label' => 'Options',
             'url' => '',
-            'iconUrl' => '/static/apps/lib_options/img/cog-32.png',
+            'iconUrl' => '',
+            'defaultIconUrl' => '/static/apps/lib_options/img/cog-32.png',
             'app' => true,
             'iconSize' => 32,
             'labelDisplay' => false,
         ),
+        'form_name' => '',
     );
     protected static $options_paths = array();
 
@@ -112,7 +114,6 @@ class Controller_Admin_Options extends \Nos\Controller_Admin_Application
      */
     protected function view_params()
     {
-        $metadata = \Config::load(self::getCurrentApplication().'::metadata');
         $view_params = array(
             'lib_options' => array(
                 'config' => $this->config,
@@ -120,7 +121,7 @@ class Controller_Admin_Options extends \Nos\Controller_Admin_Application
                 'url_save' => $this->config['controller_url'].'/save',
             ),
             'config' => \Config::load(APPPATH.self::$options_paths[get_called_class()], true),
-            'app_name' => \Arr::get($metadata, 'name'),
+            'form_name' => $this->config['form_name'],
         );
 
         $view_params['view_params'] = &$view_params;
@@ -147,8 +148,22 @@ class Controller_Admin_Options extends \Nos\Controller_Admin_Application
 
     protected function config_build()
     {
-        if (empty($this->config['controller_url'])) $this->config['controller_url'] = self::get_path();
-        if (empty($this->config['tab']['url'])) $this->config['tab']['url'] = $this->config['controller_url'].'/form';
+        $metadata = \Config::load(self::getCurrentApplication().'::metadata');
+
+        if (!\Arr::get($this->config, 'controller_url')) {
+            \Arr::set($this->config, 'controller_url', self::get_path());
+        }
+        if (!\Arr::get($this->config, 'tab.url')) {
+            \Arr::set($this->config, 'tab.url', $this->config['controller_url'].'/form');
+        }
+        if (!\Arr::get($this->config, 'tab.iconUrl')) {
+            \Arr::set($this->config, 'tab.iconUrl', \Arr::get($metadata, 'icons.32') ? \Arr::get($metadata, 'icons.32') : \Arr::get($this->config, 'tab.defaultIconUrl'));
+        }
+
+        //Configure default form name
+        $form_name = \Arr::get($this->config, 'form_name', false) ? \Arr::get($this->config, 'form_name') : \Arr::get($metadata, 'name').' options';
+        \Arr::set($this->config, 'form_name', $form_name);
+
         // Convert simplified layout syntax into the full syntax
         foreach (array('layout', 'layout_insert', 'layout_update') as $layout_name) {
             if (!empty($this->config[$layout_name])) {

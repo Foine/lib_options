@@ -6,7 +6,7 @@ $form_id = uniqid('options_form');
 <div id="<?= $form_id ?>" class="page">
     <div class="line">
         <div class="col c12">
-            <h1 class="title" style="margin-bottom: 1em;"><?= $app_name.' options' ?></h1>
+            <h1 class="title" style="margin-bottom: 1em;"><?= $form_name ?></h1>
         </div>
     </div>
     <?php
