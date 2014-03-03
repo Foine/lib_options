@@ -19,10 +19,13 @@ if (empty($saveField) && !empty($fieldset)) {
                     $container.find('form:visible').submit();
                 });
 
-            //@TODO : changement de context
-            var context_select = $.nosUIElement(<?= \View::forge('lib_options::admin/subviews/context_select', $view_params, false) ?>);
-            $container.nosToolbar('add', context_select, true);
-            context_select.nosOnShow();
+            <?php
+            $context_selector = (string)\View::forge('lib_options::admin/subviews/context_select', $view_params, false);
+                if (!empty($context_selector)) : ?>
+                var context_select = $.nosUIElement(<?= $context_selector ?>);
+                $container.nosToolbar('add', context_select, true);
+                context_select.nosOnShow();
+            <?php endif; ?>
         });
     });
 </script>
