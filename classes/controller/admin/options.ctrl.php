@@ -143,7 +143,7 @@ class Controller_Admin_Options extends \Nos\Controller_Admin_Application
 
     protected static function _setOptionsPath() {
         list($application, $file_name) = \Config::configFile(get_called_class());
-        self::$options_paths[get_called_class()] = 'data/apps/'.$application.'/options.config.php';
+        self::$options_paths[get_called_class()] = 'data/apps/'.$application.'/' . str_replace('\\','_',get_called_class()) . '.config.php';
     }
 
     protected function config_build()
