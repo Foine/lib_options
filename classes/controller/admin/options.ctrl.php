@@ -59,10 +59,17 @@ class Controller_Admin_Options extends \Nos\Controller_Admin_Application
         $view_params = $this->view_params();
         $view_params['context'] = $context;
         \Arr::set($view_params, 'config.'.$view_params['context'].'.context', $view_params['context']);
-        $fields = $this->config['fields'];
 
+        //Populate fieldset
+        $fields = $this->config['fields'];
         $fieldset = \Fieldset::build_from_config($fields, null , $this->build_from_config());
-        $fieldset->populate(\Arr::get($view_params, 'config.'.$view_params['context'], array()));
+        $fields_configuration = \Arr::get($view_params, 'config.'.$view_params['context']);
+        foreach ($this->config['fields'] as $field_name => $field_properties) { //This foreach is for common fields.
+            if (\Arr::get($field_properties, 'common_field', false)) {
+                \Arr::set($fields_configuration, $field_name, \Arr::get($view_params, 'config.'.$field_name));
+            }
+        }
+        $fieldset->populate($fields_configuration);
         $view_params['fieldset'] = $fieldset;
 
         // We can't do this form inside the view_params() method, because additional vars (added
@@ -79,13 +86,17 @@ class Controller_Admin_Options extends \Nos\Controller_Admin_Application
         $context = \Fuel\Core\Input::post('context') ? \Fuel\Core\Input::post('context') : \Nos\Tools_Context::defaultContext();
         $config[$context] = array();
         \Config::save(APPPATH.self::$options_paths[get_called_class()],$config); //Empty the configuration file for the current context is needed to update fields such as checkbox
-        if ($context != '') {
-            foreach ($_POST as $name => $value) {
-                if ($name == 'context') continue;
-                $config[$context][$name] = \Fuel\Core\Input::post($name);
+        $fields = $this->config['fields'];
+        \Security::clean_input();
+        foreach ($fields as $name => $properties) {
+            $value = \Input::post($name);
+            if (\Arr::get($properties, 'common_field', false)) {
+                \Arr::set($config, $name, $value);
+            } else if ($context != '') {
+                \Arr::set($config, $context.'.'.$name, $value);
             }
-            $result = \Config::save(APPPATH.self::$options_paths[get_called_class()], $config);
         }
+        $result = \Config::save(APPPATH.self::$options_paths[get_called_class()], $config);
         $return = array();
         if (!empty($result)) {
             $return['success'] = true;
