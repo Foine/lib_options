@@ -40,3 +40,6 @@ $form_id = uniqid('options_form');
             }
             );
 </script>
+
+<?php //Common field plugin
+echo \View::forge('crud/context_common_fields', array('container_id' => $form_id), false);

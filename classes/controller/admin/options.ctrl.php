@@ -61,15 +61,25 @@ class Controller_Admin_Options extends \Nos\Controller_Admin_Application
         \Arr::set($view_params, 'config.'.$view_params['context'].'.context', $view_params['context']);
 
         //Populate fieldset
-        $fields = $this->config['fields'];
-        $fieldset = \Fieldset::build_from_config($fields, null , $this->build_from_config());
-        $fields_configuration = \Arr::get($view_params, 'config.'.$view_params['context']);
+        $fields_values = \Arr::get($view_params, 'config.'.$view_params['context']);
         foreach ($this->config['fields'] as $field_name => $field_properties) { //This foreach is for common fields.
-            if (\Arr::get($field_properties, 'common_field', false)) {
-                \Arr::set($fields_configuration, $field_name, \Arr::get($view_params, 'config.'.$field_name));
+            if (\Arr::get($field_properties, 'common_field', false)) { //Edit field properties to set the common fields configuration
+                \Arr::set($field_properties, 'form.disabled', true);
+                \Arr::set($field_properties, 'form.context_common_field', true);
+                $allowed_contexts = \Nos\User\Permission::contexts();
+                $context_labels = array();
+                foreach (array_keys($allowed_contexts) as $context) {
+                    $context_labels[] = \Nos\Tools_Context::contextLabel($context);
+                }
+                $context_labels = htmlspecialchars(\Format::forge($context_labels)->to_json());
+                \Arr::set($field_properties, 'form.data-other-contexts', $context_labels);
+                \Arr::set($this->config['fields'], $field_name, $field_properties);
+                \Arr::set($fields_values, $field_name, \Arr::get($view_params, 'config.'.$field_name));
             }
         }
-        $fieldset->populate($fields_configuration);
+        $fields = $this->config['fields'];
+        $fieldset = \Fieldset::build_from_config($fields, null , $this->build_from_config());
+        $fieldset->populate($fields_values);
         $view_params['fieldset'] = $fieldset;
 
         // We can't do this form inside the view_params() method, because additional vars (added
