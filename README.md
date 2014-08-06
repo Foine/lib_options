@@ -98,12 +98,15 @@ An exemple of launcher that calls our previous controller :
         'action' => array(
             'action' => 'nosTabs',
             'tab' => array(
-                'url' => 'admin/bru_google_analytics/options/form',
+                'url' => 'admin/bru_google_analytics/options',
             )
         ),
     ),
 
-Note that there is a "form" methods that it is called. This method do the job in the lib options controller, so if you don't call it, nothing append!
+Above, the index action of your controller is called (default action of fuel). In the lib_options, the index action call the form action of the controller.
+So you will have the same result if you call "admin/bru_google_analytics/options/form" in the previus example.
+This method do the job in the lib options controller, so if you don't call it, nothing append!
+
 
 ***4/ Enjoy!***
 

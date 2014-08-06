@@ -41,11 +41,24 @@ class Controller_Admin_Options extends \Nos\Controller_Admin_Application
     );
     protected static $options_paths = array();
 
+    public static function _init()
+    {
+        \Nos\I18n::current_dictionary(array('nos::application', 'nos::common'));
+    }
+
     public function before()
     {
         parent::before();
         $this->_setOptionsPath();
         $this->config_build();
+    }
+
+    /*
+     * This action is just here to allow user not to call the form action.
+     */
+    public function action_index($context = null)
+    {
+        return $this->action_form($context);
     }
 
     public function action_form($context = null)
@@ -184,6 +197,9 @@ class Controller_Admin_Options extends \Nos\Controller_Admin_Application
         //Configure default form name
         $form_name = \Arr::get($this->config, 'form_name', false) ? \Arr::get($this->config, 'form_name') : \Arr::get($metadata, 'name').' options';
         \Arr::set($this->config, 'form_name', $form_name);
+
+        //Translate the save button
+        \Arr::set($this->config, 'fields.save.form.value', __(\Arr::get($this->config, 'fields.save.form.value', 'Save')));
 
         // Convert simplified layout syntax into the full syntax
         foreach (array('layout', 'layout_insert', 'layout_update') as $layout_name) {
