@@ -133,3 +133,47 @@ Enjoy ! (again)
 
 I hope there is no mistake in the code that I give you.
 Do not hesitate to tell me if there is! And do not hesitate to correct my english to !
+
+***5/ Go further***
+
+The lib_options app allow even much than that !
+
+***Common fields***
+
+In your fields configurations, you can add a key `common_field` to true. With that, the field value will be shared in all available context. Thoses datas are tock in the first level of the array retrive by the `getOptions` method.
+
+
+***More actions***
+
+Into your controller configuration file you can add a `toolbar_actions` key. There is an exemple that add 2 actions button to you option form.
+
+    'toolbar_actions' => array(
+        'import' => array(
+            'action' => array(
+                'action' => 'nosDialog',
+                'dialog' => array(
+                    'ajax' => true,
+                    'contentUrl' => 'admin/my_app/my_controller/import',
+                    'title' => 'Import datas',
+                ),
+            ),
+            'label' => 'Import datas',
+            'icon' => 'arrowstop-1-s',
+        ),
+        'export' => array(
+            'action' => array(
+                'action' => 'nosDialog',
+                'dialog' => array(
+                    'ajax' => true,
+                    'contentUrl' => 'admin/my_app/my_controller/export',
+                    'title' => 'Export datas',
+                ),
+            ),
+            'label' => 'Export datas',
+            'icon' => 'arrowstop-1-n',
+        ),
+    ),
+
+You can see how configure your custom action here : http://docs-api.novius-os.org/en/latest/php/configuration/application/common.html#actions
+
+The keys `targets`, `disable` and `visible` are not take in count.
