@@ -38,7 +38,7 @@ class Controller_Admin_Options extends \Nos\Controller_Admin_Application
             'labelDisplay' => false,
         ),
         'form_name' => '',
-        'actions' => array(),
+        'toolbar_actions' => array(),
     );
     protected static $options_paths = array();
 
