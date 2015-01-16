@@ -38,6 +38,7 @@ class Controller_Admin_Options extends \Nos\Controller_Admin_Application
             'labelDisplay' => false,
         ),
         'form_name' => '',
+        'toolbar_actions' => array(),
     );
     protected static $options_paths = array();
 
@@ -156,6 +157,7 @@ class Controller_Admin_Options extends \Nos\Controller_Admin_Application
             ),
             'config' => \Config::load(APPPATH.self::$options_paths[get_called_class()], true),
             'form_name' => $this->config['form_name'],
+            'toolbar_actions' => $this->config['toolbar_actions'],
         );
 
         $view_params['view_params'] = &$view_params;
