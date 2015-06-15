@@ -114,8 +114,12 @@ class Controller_Admin_Options extends \Nos\Controller_Admin_Application
         \Security::clean_input();
         foreach ($fields as $name => $properties) {
             $value = \Input::post($name);
-            if (\Arr::get($properties, 'common_field', false)) {
-                \Arr::set($config, $name, $value);
+            if (\Arr::get($properties, 'common_field', false)) { //Just take in count posted
+                if (isset($_POST[$name])) {
+                    \Arr::set($config, $name, $value);
+                } else {
+                    \Arr::set($config, $name, \Arr::get($config, $name));
+                }
             } else if ($context != '') {
                 \Arr::set($config, $context.'.'.$name, $value);
             }
